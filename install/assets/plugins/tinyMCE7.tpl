@@ -1,20 +1,20 @@
 //<?php
 /**
- * TinyMCE 7
+ * TinyMCE7
  *
  *
  * @category    plugin
- * @version     0.1 Beta
+ * @version     0.2 Beta
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     Evolution
  * @internal    @events OnRichTextEditorInit,OnRichTextEditorRegister,OnInterfaceSettingsRender
  * @internal    @modx_category Manager and Admin
- * @internal    @properties {"plugins":[{"label":"plugins","type":"textarea","value":"preview importcss searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link customlink media codesample table charmap nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons","default":"preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons","desc":""}],"toolbar":[{"label":"toolbar","type":"textarea","value":"styleselect | undo redo | blocks fontsize | bold italic underline strikethrough | align numlist bullist | link customlink image | table media | lineheight outdent indent| forecolor backcolor removeformat | code fullscreen preview |anchor codesample | visualblocks","default":"undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | anchor codesample","desc":""}],"width":[{"label":"width","type":"string","value":"100%","default":"100%","desc":""}],"height":[{"label":"height","type":"string","value":"500px","default":"500px","desc":""}],"content_style":[{"label":"content_style","type":"string","value":"","default":"body {font-family:Helvetica,Arial,sans-serif; font-size:36px }","desc":""}],"valid_elements":[{"label":"valid_elements","type":"string","value":"","default":"*[*]","desc":""}],"paste_as_text":[{"label":"paste_as_text","type":"list","value":"false","options":"true,false","default":"true,false","desc":""}]}
+ * @internal    @properties {"plugins":[{"label":"plugins","type":"textarea","value":"preview importcss searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link customlink media codesample table charmap nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons","default":"preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons","desc":""}],"toolbar":[{"label":"toolbar","type":"textarea","value":"undo redo | blocks fontsize | bold italic underline strikethrough | align numlist bullist | link unlink customlink image | table media | lineheight outdent indent| forecolor backcolor removeformat | code fullscreen preview |anchor codesample | visualblocks","default":"undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | anchor codesample","desc":""}],"width":[{"label":"width","type":"string","value":"100%","default":"100%","desc":""}],"height":[{"label":"height","type":"string","value":"500px","default":"500px","desc":""}],"content_style":[{"label":"content_style","type":"string","value":"","default":"body {font-family:Helvetica,Arial,sans-serif; font-size:36px }","desc":""}],"valid_elements":[{"label":"valid_elements","type":"string","value":"","default":"*[*]","desc":""}],"paste_as_text":[{"label":"paste_as_text","type":"list","value":"false","options":"true,false","default":"true,false","desc":""}],"menubar":[{"label":"menubar","type":"list","value":"false","options":"true,false","default":"true,false","desc":""}]}
  * @internal    @installset base
- * @reportissues https://github.com/Grinyaha/__
+ * @reportissues https://github.com/Grinyaha/tinyMCE7_plugin_EvolutionCMS
  * @documentation README.md
  * @author      plugin author Grinyaha
- * @lastupdate  01/01/9999
+ * @lastupdate  18/05/2025
  */
 
 switch (evo()->event->name) {
@@ -76,30 +76,30 @@ tinymce.init({
               valid_elements: "'.$params['valid_elements'].'",
         selector: "'.$initvs.'",
               paste_as_text: '.$params['paste_as_text'].',
-    height: "'.$params['height'].'",
-    width: "'.$params["width"].'",
-    max_height: "'.$params['max_height'].'",
-    relative_urls: false,
+       height: "'.$params['height'].'",
+       width: "'.$params["width"].'",
+       //max_height: "'.$params['max_height'].'",
+              relative_urls: false,
         plugins: "'.$params['plugins'].'",
-    base_url: "/assets/plugins/tinymce7",
-    external_plugins: {
+       base_url: "/assets/plugins/tinymce7",
+       external_plugins: {
                 "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js"
             },
         toolbar: "'.$params['toolbar'].'",
-        menubar: false,
-        //content_css: "/editor-styles.css",
+        menubar: '.$params['menubar'].',
+        //content_css: "/editor-styles.css", //работает вместе с toolbar->styles
         language: "'.$lang.'",
         language_url: "/assets/plugins/tinymce7/langs/ru.js",
-    content_style: "'.$params['content_style'].'",
+       content_style: "'.$params['content_style'].'",
 
-    //plugin IMAGE
+/////plugin IMAGE
 
         image_class_list: [
                 { title: "Responsive", value: "img-responsive" },
                 { title: "Rounded", value: "img-rounded" },
                 { title: "Shadow", value: "img-shadow" }
         ],
-    image_advtab: true,
+       image_advtab: true,
         setup: function(editor) {
                 editor.on("OpenWindow", function(e) {
                         const dialog = document.querySelector(".tox-dialog");
