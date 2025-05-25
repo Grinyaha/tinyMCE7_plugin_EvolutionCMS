@@ -1,10 +1,10 @@
 
 
-function tmce_init(selector) {
+function tmce_init(selector,lang) {
     return {
         license_key: "gpl",
         schema: "html5",
-        language: localStorage.getItem('tiny_lang'),
+        language: lang,
         language_url: "/assets/plugins/tinymce7/langs/ru.js",
         selector: selector,
         plugins: 'searchreplace quickbars nonbreaking code',

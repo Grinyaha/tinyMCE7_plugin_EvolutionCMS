@@ -4,12 +4,12 @@
  *
  *
  * @category    plugin
- * @version     0.5 Beta
+ * @version     0.7 Beta
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     Evolution
  * @internal    @events OnRichTextEditorInit,OnRichTextEditorRegister,OnInterfaceSettingsRender
  * @internal    @modx_category Manager and Admin
- * @internal    @properties {"plugins":[{"label":"plugins","type":"textarea","value":"preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link customlink media codesample table charmap nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons","default":"preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons","desc":""}],"toolbar":[{"label":"toolbar","type":"textarea","value":"undo redo | styles fontsize | bold italic underline strikethrough | align numlist bullist | link unlink customlink image | table media | lineheight outdent indent| forecolor backcolor removeformat | code fullscreen preview |anchor codesample | visualblocks | subscript superscript searchreplace","default":"undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | anchor codesample","desc":""}],"width":[{"label":"width","type":"string","value":"100%","default":"100%","desc":""}],"height":[{"label":"height","type":"string","value":"500px","default":"500px","desc":""}],"content_style":[{"label":"content_style","type":"string","value":"","default":"body {font-family:Helvetica,Arial,sans-serif; font-size:36px }","desc":""}],"valid_elements":[{"label":"valid_elements","type":"string","value":"","default":"*[*]","desc":""}],"paste_as_text":[{"label":"paste_as_text","type":"list","value":"false","options":"true,false","default":"true,false","desc":""}],"menubar":[{"label":"menubar","type":"list","value":"false","options":"true,false","default":"true,false","desc":""}],"quickbars_selection_toolbar":[{"label":"quickbars_selection_toolbar","type":"list","value":"true","options":"true,false","default":"true,false","desc":""}],"quickbars_insert_toolbar":[{"label":"quickbars_insert_toolbar","type":"list","value":"true","options":"true,false","default":"true,false","desc":""}],"pagebuilder_file_theme":[{"label":"pagebuilder_file_theme","type":"string","value":"default.js","default":"default.js","desc":""}],"multitv_file_theme":[{"label":"multitv_file_theme","type":"string","value":"default.js","default":"default.js","desc":""}]}
+ * @internal    @properties {"plugins":[{"label":"plugins","type":"textarea","value":"preview searchreplace autolink autosave directionality code visualblocks visualchars fullscreen image link customlink media codesample table charmap nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons","default":"preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons","desc":""}],"toolbar":[{"label":"toolbar","type":"textarea","value":"undo redo | styles fontsize | bold italic underline strikethrough | align numlist bullist | link unlink customlink image | table media | lineheight outdent indent| forecolor backcolor removeformat | code fullscreen preview |anchor codesample | visualblocks | subscript superscript searchreplace","default":"undo redo | accordion accordionremove | blocks fontfamily fontsize | bold italic underline strikethrough | align numlist bullist | link image | table media | lineheight outdent indent| forecolor backcolor removeformat | charmap emoticons | code fullscreen preview | anchor codesample","desc":""}],"width":[{"label":"width","type":"string","value":"100%","default":"100%","desc":""}],"height":[{"label":"height","type":"string","value":"500px","default":"500px","desc":""}],"content_style":[{"label":"content_style","type":"string","value":"","default":"body {font-family:Helvetica,Arial,sans-serif; font-size:36px }","desc":""}],"valid_elements":[{"label":"valid_elements","type":"string","value":"","default":"*[*]","desc":""}],"paste_as_text":[{"label":"paste_as_text","type":"list","value":"false","options":"true,false","default":"true,false","desc":""}],"menubar":[{"label":"menubar","type":"list","value":"false","options":"true,false","default":"true,false","desc":""}],"quickbars_selection_toolbar":[{"label":"quickbars_selection_toolbar","type":"list","value":"true","options":"true,false","default":"true,false","desc":""}],"quickbars_insert_toolbar":[{"label":"quickbars_insert_toolbar","type":"list","value":"true","options":"true,false","default":"true,false","desc":""}],"pagebuilder_file_theme":[{"label":"pagebuilder_file_theme","type":"string","value":"default.js","default":"default.js","desc":""}],"multitv_file_theme":[{"label":"multitv_file_theme","type":"string","value":"default.js","default":"default.js","desc":""}],"others_params":[{"label":"others_params","type":"textarea","value":"","default":"","desc":""}]}
  * @internal    @installset base
  * @reportissues https://github.com/Grinyaha/tinyMCE7_plugin_EvolutionCMS
  * @documentation README.md
@@ -26,8 +26,8 @@ break;
 case 'OnRichTextEditorInit':
 if ($editor == 'TinyMCE7') {
 
-$_SESSION['pagebuilder_file_theme'] = $params['pagebuilder_file_theme'];
-$_SESSION['multitv_file_theme'] = $params['multitv_file_theme'];
+$others_params = "";
+if(!empty($params['others_params'])) $others_params = $params['others_params'].",";
 
 //evo()->logEvent(1,1,"<pre>".print_r(, true)."</pre>",'FOR EVO4_1x !!!');
 //language
@@ -44,8 +44,8 @@ $output = '
 <script src="/assets/plugins/tinymce7/tinymce.min.js"></script>
 
 <script>
-    let editorCallback = null; // сюда сохраним callback TinyMCE
-    let currentFieldId = null; // сюда сохраним ID input"а из диалога
+    let editorCallback = null;
+    let currentFieldId = null;
 
     function openFileManagerForTinyMCE(field_type, callback) {
         editorCallback = callback;
@@ -73,8 +73,7 @@ $output = '
         }
     }
 
-    //for PageBuilder
-    localStorage.setItem("tiny_lang", "'.$modx->getConfig('manager_language').'");
+
 
 
     tinymce.init({
@@ -100,6 +99,7 @@ $output = '
         //content_style: "'.$params['content_style'].'",
         quickbars_selection_toolbar: '.$params['quickbars_selection_toolbar'].',
         quickbars_insert_toolbar: '.$params['quickbars_insert_toolbar'].',
+        '.$others_params.'
 
 /////plugin IMAGE
 
