@@ -1,4 +1,10 @@
 # tinyMCE7_plugin_EvolutionCMS
 Плагин TinyMCE7 для Evolution CMS
 
+
+26.05.2025
 Beta 0.8
+
+Установка как zip архив через модуль Extras.
+В качестве файлового менеджера работает только с ResponsiveFileManager для Evo (ставится из экстрас), mcpuk на данный момент не интегрирован.
+Совместим с MultiTv и PageBuilder из моего гита (на данный момент)
