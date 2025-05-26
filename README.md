@@ -1,5 +1,5 @@
 # tinyMCE7_plugin_EvolutionCMS
-Плагин TinyMCE7 для Evolution CMS
+Плагин TinyMCE7 для Evolution CMS 1.4 и 3.1.х
 
 
 26.05.2025 <br>
