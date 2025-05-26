@@ -2,7 +2,7 @@
 Плагин TinyMCE7 для Evolution CMS
 
 
-26.05.2025 
+26.05.2025 <br>
 Beta 0.8
 
 Установка как zip архив через модуль Extras.
