@@ -7,7 +7,12 @@ function tmce_init(selector,lang) {
         language: lang,
         language_url: "/assets/plugins/tinymce7/langs/"+lang+".js",
         selector: selector,
-        plugins: 'searchreplace quickbars nonbreaking code',
+        relative_urls: false,
+        document_base_url: "/",
+        plugins: 'searchreplace quickbars nonbreaking code link customlink',
+        external_plugins: {
+            "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js"
+        },
         toolbar: 'undo redo | styles | bold italic underline strikethrough | link image | searchreplace image table code',
         menubar: false
     };

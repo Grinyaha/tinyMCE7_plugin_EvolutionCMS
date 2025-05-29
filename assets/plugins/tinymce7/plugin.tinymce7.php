@@ -72,8 +72,9 @@ $output = '
         width: "'.$params["width"].'",
         //max_height: "'.$params['max_height'].'",
         relative_urls: false,
+        document_base_url: "/",
         plugins: "'.$params['plugins'].'",
-        base_url: "/assets/plugins/tinymce7",
+        //base_url: "/assets/plugins/tinymce7",
         external_plugins: {
             "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js"
         },
