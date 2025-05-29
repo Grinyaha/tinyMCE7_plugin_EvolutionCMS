@@ -5,6 +5,7 @@
  * @package tinymce
  */
 define('MODX_API_MODE', true);
+define('NO_TRACY', true);
 include_once("../../../../../index.php");
 
 $modx->db->connect();
@@ -19,11 +20,11 @@ $query = $modx->db->escape($_GET['q']);
 
 $where = "`pagetitle` LIKE '%".$query."%' OR `alias` LIKE '%".$query."%' AND deleted=0";
 
-$result = $modx->db->select("id,pagetitle,alias", $modx->getFullTableName('site_content'), $where, '', 10); 
+$result = $modx->db->select("id,pagetitle,alias", $modx->getFullTableName('site_content'), $where, '', 10);
 
 $a = array();
-while( $row = $modx->db->getRow( $result ) ) { 
-	$output .= $row['pagetitle'] . ' (' . $row['id'] . ')|'. $row['id'] . "\n"; 
+while( $row = $modx->db->getRow( $result ) ) {
+	$output .= $row['pagetitle'] . ' (' . $row['id'] . ')|'. $row['id'] . "\n";
 	$a[] = array(
 		'id' => $row['id']
 		,'pagetitle' => $row['pagetitle'] .' ('.$row['id'].')'
