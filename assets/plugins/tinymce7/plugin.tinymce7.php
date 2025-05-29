@@ -15,8 +15,10 @@ if(!empty($params['others_params'])) $others_params = $params['others_params']."
 
 //evo()->logEvent(1,1,"<pre>".print_r(, true)."</pre>",'FOR EVO4_1x !!!');
 //language
-if(evo()->getConfig('manager_language')=="ru" || evo()->getConfig('manager_language')=="russian-UTF8" || evo()->getConfig('manager_language')=="russian") $lang = "ru";
-else $lang = "en";
+if(evo()->getConfig('manager_language')=="ru" || evo()->getConfig('manager_language')=="russian-UTF8" || evo()->getConfig('manager_language')=="russian") {
+    $lang = "ru";
+}
+else $lang = evo()->getConfig('manager_language');
 
 $initvs = [];
 foreach(evo()->event->params['elements'] as $id) {
@@ -78,8 +80,8 @@ $output = '
         toolbar: "'.$params['toolbar'].'",
         menubar: '.$params['menubar'].',
         content_css: "'.$params['content_css'].'",
-        language: "ru",
-        language_url: "/assets/plugins/tinymce7/langs/ru.js",
+        language: "'.$lang.'",
+        language_url: "/assets/plugins/tinymce7/langs/'.$lang.'.js",
         //content_style:
         quickbars_selection_toolbar: '.$params['quickbars_selection_toolbar'].',
         quickbars_insert_toolbar: '.$params['quickbars_insert_toolbar'].',
