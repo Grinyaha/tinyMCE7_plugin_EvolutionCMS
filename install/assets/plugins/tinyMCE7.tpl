@@ -4,7 +4,7 @@
  *
  *
  * @category    plugin
- * @version     0.91 Beta
+ * @version     0.92 Beta
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     Evolution
  * @internal    @events OnRichTextEditorInit,OnRichTextEditorRegister,OnInterfaceSettingsRender

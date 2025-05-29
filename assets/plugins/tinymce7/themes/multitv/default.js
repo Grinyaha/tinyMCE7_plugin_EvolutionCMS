@@ -6,7 +6,7 @@ function tmce_mtvinit(selector,lang) {
         license_key: "gpl",
         schema: "html5",
         language: lang,
-        language_url: "/assets/plugins/tinymce7/langs/ru.js",
+        language_url: "/assets/plugins/tinymce7/langs/"+lang+".js",
         selector: selector,
         plugins: 'searchreplace quickbars nonbreaking code',
         toolbar: 'undo redo | styles | bold italic underline strikethrough | link image | searchreplace image table code',
