@@ -4,7 +4,7 @@
  *
  *
  * @category    plugin
- * @version     0.8 Beta
+ * @version     0.9 Beta
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     Evolution
  * @internal    @events OnRichTextEditorInit,OnRichTextEditorRegister,OnInterfaceSettingsRender
@@ -14,140 +14,7 @@
  * @reportissues https://github.com/Grinyaha/tinyMCE7_plugin_EvolutionCMS
  * @documentation README.md
  * @author      plugin author Grinyaha
- * @lastupdate  25/05/2025
+ * @lastupdate  29/05/2025
  */
 
-switch (evo()->event->name) {
-
-case 'OnRichTextEditorRegister':
-evo()->event->output('TinyMCE7'); // Имя редактора
-break;
-
-case 'OnRichTextEditorInit':
-if ($editor == 'TinyMCE7') {
-
-$others_params = "";
-if(!empty($params['others_params'])) $others_params = $params['others_params'].",";
-
-
-//language
-if(evo()->getConfig('manager_language')=="ru" || evo()->getConfig('manager_language')=="russian-UTF8" || evo()->getConfig('manager_language')=="russian") $lang = "ru";
-else $lang = "en";
-
-$initvs = [];
-foreach(evo()->event->params['elements'] as $id) {
-$initvs[] = "#".$id;
-}
-$initvs = implode(',', $initvs);
-$output = '
-
-<script src="/assets/plugins/tinymce7/tinymce.min.js"></script>
-
-<script>
-    let editorCallback = null;
-    let currentFieldId = null;
-
-    function openFileManagerForTinyMCE(field_type, callback) {
-        editorCallback = callback;
-
-        const width = window.innerWidth * 1;
-        const height = window.innerHeight * 0.6;
-        const screenWidth = window.screen.width;
-        const screenHeight = window.screen.height;
-        const left = (screenWidth - width) / 2;
-        const top = (screenHeight - height) / 2;
-
-        // Используем сохранённый ID
-        const fieldId = currentFieldId || "default_field_id";
-
-        const url = "/manager/media/browser/filemanager/browser.php?Type="+field_type+"&field_id=" + encodeURIComponent(fieldId) + "&popup=1&relative_url=1";
-
-        window.open(url, "Responsive Filemanager", "width=" + width + ",height=" + height + ",resizable=yes,scrollbars=yes,left="+left+",top="+top);
-    }
-
-
-    function SetUrl(url) {
-        if (editorCallback) {
-            editorCallback(url);
-            editorCallback = null; // очищаем после использования
-        }
-    }
-
-
-
-
-    tinymce.init({
-        license_key: "gpl",
-        schema: "html5",
-        valid_elements: "'.$params['valid_elements'].'",
-        selector: "'.$initvs.'",
-        paste_as_text: '.$params['paste_as_text'].',
-        height: "'.$params['height'].'",
-        width: "'.$params["width"].'",
-        //max_height: "'.$params['max_height'].'",
-        relative_urls: false,
-        plugins: "'.$params['plugins'].'",
-        base_url: "/assets/plugins/tinymce7",
-        external_plugins: {
-            "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js"
-        },
-        toolbar: "'.$params['toolbar'].'",
-        menubar: '.$params['menubar'].',
-        content_css: "'.$params['content_css'].'",
-        language: "ru",
-        language_url: "/assets/plugins/tinymce7/langs/ru.js",
-        //content_style:
-        quickbars_selection_toolbar: '.$params['quickbars_selection_toolbar'].',
-        quickbars_insert_toolbar: '.$params['quickbars_insert_toolbar'].',
-        '.$others_params.'
-
-/////plugin IMAGE
-
-        image_class_list: [
-            { title: "Responsive", value: "img-responsive" },
-            { title: "Rounded", value: "img-rounded" },
-            { title: "Shadow", value: "img-shadow" }
-        ],
-        image_advtab: true,
-        setup: function(editor) {
-            editor.on("OpenWindow", function(e) {
-                const dialog = document.querySelector(".tox-dialog");
-                if (!dialog) return;
-
-                setTimeout(() => {
-                    const firstInput = dialog.querySelector(\'input[type="url"], input[type="text"]\');
-                    if (firstInput) {
-                        currentFieldId = firstInput.id; // Сохраняем ID прямо сюда
-                        //console.log("ID первого поля (предположительно Source):", currentFieldId);
-                    }
-                }, 50);
-            });
-
-        },
-
-        // Подключение своего file_picker_callback
-        file_picker_types: "file image media",
-
-        file_picker_callback: function(callback, value, meta) {
-            let rfmTypeParameter;
-
-            if (meta.filetype === "image") {
-                rfmTypeParameter = "images";
-            } else if (meta.filetype === "file" || meta.filetype === "media") {
-                rfmTypeParameter = "files";
-            } else {
-                // Обработка неизвестных типов файлов, если необходимо
-                console.warn("Неизвестный тип файла в file_picker_callback: " + meta.filetype);
-                return;
-            }
-
-            openFileManagerForTinyMCE(rfmTypeParameter, callback);
-        }
-    });
-
-</script>
-';
-evo()->event->output($output);
-}
-break;
-}
+require MODX_BASE_PATH.'assets/plugins/tinymce7/plugin.tinymce7.php';
