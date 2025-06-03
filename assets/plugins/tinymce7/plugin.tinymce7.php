@@ -96,6 +96,7 @@ $output = '
             { title: "Shadow", value: "img-shadow" }
         ],
         image_advtab: true,
+
         setup: function(editor) {
             editor.on("OpenWindow", function(e) {
                 const dialog = document.querySelector(".tox-dialog");
@@ -108,7 +109,12 @@ $output = '
                         //console.log("ID первого поля (предположительно Source):", currentFieldId);
                     }
                 }, 50);
-            });
+            }),
+            editor.on("PostProcess", function (e) {
+            if (e.content) {
+                e.content = e.content.replace(/<iframe(.*?)sandbox=".*?"(.*?)>/g, "<iframe$1$2>");
+            }
+        });
 
         },
 
