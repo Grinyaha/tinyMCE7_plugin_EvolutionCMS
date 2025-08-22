@@ -65,28 +65,29 @@ $output = '
     tinymce.init({
         license_key: "gpl",
         schema: "html5",
-        valid_elements: "'.$params['valid_elements'].'",
-        selector: "'.$initvs.'",
-        paste_as_text: '.$params['paste_as_text'].',
-        height: "'.$params['height'].'",
-        width: "'.$params["width"].'",
-        //max_height: "'.$params['max_height'].'",
+        valid_elements: "' . $params['valid_elements'] . '",
+        selector: "' . $initvs . '",
+        paste_as_text: ' . $params['paste_as_text'] . ',
+        height: "' . $params['height'] . '",
+        width: "' . $params["width"] . '",
+        //max_height: "' . $params['max_height'] . '",
+        paste_data_images: ' . $params['paste_data_images'] . ',
         relative_urls: false,
         document_base_url: "/",
-        plugins: "'.$params['plugins'].'",
+        plugins: "' . $params['plugins'] . '",
         //base_url: "/assets/plugins/tinymce7",
         external_plugins: {
             "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js"
         },
-        toolbar: "'.$params['toolbar'].'",
-        menubar: '.$params['menubar'].',
-        content_css: "'.$params['content_css'].'",
-        language: "'.$lang.'",
-        language_url: "/assets/plugins/tinymce7/langs/'.$lang.'.js",
+        toolbar: "' . $params['toolbar'] . '",
+        menubar: ' . $params['menubar'] . ',
+        content_css: "' . $params['content_css'] . '",
+        language: "' . $lang . '",
+        language_url: "/assets/plugins/tinymce7/langs/' . $lang . '.js",
         //content_style:
-        quickbars_selection_toolbar: '.$params['quickbars_selection_toolbar'].',
-        quickbars_insert_toolbar: '.$params['quickbars_insert_toolbar'].',
-        '.$others_params.'
+        quickbars_selection_toolbar: ' . $params['quickbars_selection_toolbar'] . ',
+        quickbars_insert_toolbar: ' . $params['quickbars_insert_toolbar'] . ',
+        ' . $others_params . '
 
 /////plugin IMAGE
 
@@ -135,8 +136,32 @@ $output = '
             }
 
             openFileManagerForTinyMCE(rfmTypeParameter, callback);
-        }
+        },
+        paste_preprocess: function(plugin, args) {
+            // Очистка HTML перед вставкой (например, удаление стилей, классов и т. д.)
+            args.content = cleanWordHtml(args.content);
+          },
+          paste_postprocess: function(plugin, args) {
+            // Дополнительная очистка после вставки (если нужно)
+            args.node.innerHTML = cleanWordHtml(args.node.innerHTML);
+          }
     });
+
+            // Функция для очистки HTML из Word
+function cleanWordHtml(html) {
+    // Удаляем теги стилей, комментарии, лишние пробелы и т. д.
+    html = html.replace(/<!--.*?-->/g, ""); // Удаляем комментарии
+    html = html.replace(/<style[^>]*>.*?<\/style>/gsi, ""); // Удаляем стили
+    html = html.replace(/<meta[^>]*>/g, ""); // Удаляем мета-теги
+    html = html.replace(/<o:[^>]*>/g, ""); // Удаляем Office-теги
+    html = html.replace(/\s*class="[^"]*"/g, ""); // Удаляем классы
+    html = html.replace(/\s*style="[^"]*"/g, ""); // Удаляем инлайновые стили
+    html = html.replace(/\s*face="[^"]*"/g, ""); // Удаляем атрибуты шрифтов
+    html = html.replace(/\s*(lang|align)="[^"]*"/g, ""); // Удаляем лишние атрибуты
+    html = html.replace(/<p[^>]*>\s*&nbsp;\s*<\/p>/g, ""); // Удаляем пустые параграфы
+    html = html.replace(/<span[^>]*>(.*?)<\/span>/g, "$1"); // Удаляем лишние span
+    return html;
+}
 
 </script>
 ';
