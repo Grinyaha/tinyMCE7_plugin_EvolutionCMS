@@ -46,7 +46,7 @@ $output = '
         // Используем сохранённый ID
         const fieldId = currentFieldId || "default_field_id";
 
-        const url = "/manager/media/browser/filemanager/browser.php?Type="+field_type+"&field_id=" + encodeURIComponent(fieldId) + "&popup=1&relative_url=1";
+        const url = "/manager/media/browser/'.evo()->getConfig('which_browser').'/browser.php?Type="+field_type+"&field_id=" + encodeURIComponent(fieldId) + "&popup=1&relative_url=1";
 
         window.open(url, "Responsive Filemanager", "width=" + width + ",height=" + height + ",resizable=yes,scrollbars=yes,left="+left+",top="+top);
     }
@@ -169,3 +169,4 @@ evo()->event->output($output);
 }
 break;
 }
+

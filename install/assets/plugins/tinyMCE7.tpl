@@ -4,7 +4,7 @@
  *
  *
  * @category    plugin
- * @version     0.96 Beta
+ * @version     0.97 Beta
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     Evolution
  * @internal    @events OnRichTextEditorInit,OnRichTextEditorRegister,OnInterfaceSettingsRender
@@ -14,7 +14,7 @@
  * @reportissues https://github.com/Grinyaha/tinyMCE7_plugin_EvolutionCMS
  * @documentation README.md
  * @author      plugin author Grinyaha
- * @lastupdate  22/08/2025
+ * @lastupdate  18/09/2025
  */
 
 require MODX_BASE_PATH.'assets/plugins/tinymce7/plugin.tinymce7.php';
