@@ -1,33 +1,45 @@
 <?php
+/**
+ * TinyMCE 7 Configuration with Monaco Editor Plugin
+ *
+ * Модифицированный файл конфигурации TinyMCE 7 для MODX Evolution
+ * с интегрированным плагином Monaco Editor для просмотра исходного кода
+ */
+
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
 
 switch (evo()->event->name) {
 
-case 'OnRichTextEditorRegister':
-evo()->event->output('TinyMCE7'); // Имя редактора
-break;
+    case 'OnRichTextEditorRegister':
+        evo()->event->output('TinyMCE7'); // Имя редактора
+        break;
 
-case 'OnRichTextEditorInit':
-if ($editor == 'TinyMCE7') {
+    case 'OnRichTextEditorInit':
+        if ($editor == 'TinyMCE7') {
 
-$others_params = "";
-if(!empty($params['others_params'])) $others_params = $params['others_params'].",";
+            $others_params = "";
+            if(!empty($params['others_params'])) $others_params = $params['others_params'].",";
 
-//evo()->logEvent(1,1,"<pre>".print_r(, true)."</pre>",'FOR EVO4_1x !!!');
-//language
-if(evo()->getConfig('manager_language')=="ru" || evo()->getConfig('manager_language')=="russian-UTF8" || evo()->getConfig('manager_language')=="russian") {
-    $lang = "ru";
-}
-else $lang = evo()->getConfig('manager_language');
+            // Определение языка интерфейса
+            if(evo()->getConfig('manager_language')=="ru" ||
+                evo()->getConfig('manager_language')=="russian-UTF8" ||
+                evo()->getConfig('manager_language')=="russian") {
+                $lang = "ru";
+            }
+            else $lang = evo()->getConfig('manager_language');
 
-$initvs = [];
-foreach(evo()->event->params['elements'] as $id) {
-$initvs[] = "#".$id;
-}
-$initvs = implode(',', $initvs);
-$output = '
+            $initvs = [];
+            foreach(evo()->event->params['elements'] as $id) {
+                $initvs[] = "#".$id;
+            }
+            $initvs = implode(',', $initvs);
+
+            $output = '
 
 <script src="/assets/plugins/tinymce7/tinymce.min.js"></script>
+
+<!-- Подключение CSS стилей плагина Monaco Editor (опционально) -->
+<link rel="stylesheet" href="/assets/plugins/tinymce7/plugins/monacode/plugin.css">
 
 <script>
     let editorCallback = null;
@@ -43,7 +55,6 @@ $output = '
         const left = (screenWidth - width) / 2;
         const top = (screenHeight - height) / 2;
 
-        // Используем сохранённый ID
         const fieldId = currentFieldId || "default_field_id";
 
         const url = "/manager/media/browser/'.evo()->getConfig('which_browser').'/browser.php?Type="+field_type+"&field_id=" + encodeURIComponent(fieldId) + "&popup=1&relative_url=1";
@@ -51,16 +62,12 @@ $output = '
         window.open(url, "Responsive Filemanager", "width=" + width + ",height=" + height + ",resizable=yes,scrollbars=yes,left="+left+",top="+top);
     }
 
-
     function SetUrl(url) {
         if (editorCallback) {
             editorCallback(url);
-            editorCallback = null; // очищаем после использования
+            editorCallback = null;
         }
     }
-
-
-
 
     tinymce.init({
         license_key: "gpl",
@@ -70,27 +77,53 @@ $output = '
         paste_as_text: ' . $params['paste_as_text'] . ',
         height: "' . $params['height'] . '",
         width: "' . $params["width"] . '",
-        //max_height: "' . $params['max_height'] . '",
         paste_data_images: ' . $params['paste_data_images'] . ',
         relative_urls: false,
         document_base_url: "/",
         plugins: "' . $params['plugins'] . '",
-        //base_url: "/assets/plugins/tinymce7",
+
+        // ============================================
+        // ПОДКЛЮЧЕНИЕ ВНЕШНИХ ПЛАГИНОВ
+        // ============================================
         external_plugins: {
-            "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js"
+            "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js",
+            // Плагин Monaco Editor для подсветки исходного кода
+            "monacode": "/assets/plugins/tinymce7/plugins/monacode/plugin.js"
         },
-        toolbar: "' . $params['toolbar'] . '",
+
+        // ============================================
+        // КОНФИГУРАЦИЯ ПЛАГИНА MONACO EDITOR
+        // ============================================
+        monaco_config: {
+            theme: "VS Light",        // Тема: tinymce-dark, html-pro, vs-dark, vs, tinymce-light
+            fontSize: 14,                 // Размер шрифта (12, 14, 16, 18)
+            minimap: true,                // Показывать миникарту справа
+            wordWrap: "on",               // Перенос строк: "on", "off"
+            tabSize: 2,                   // Размер табуляции (пробелы)
+            formatOnOpen: true,           // Автоформатирование при открытии
+            lineHeight: 22,               // Высота строки
+            lineNumbers: "on",            // Нумерация строк: "on", "off", "relative"
+            scrollBeyondLastLine: false,  // Прокрутка за последнюю строку
+            automaticLayout: true,        // Автоматический ресайз при изменении размера
+            readOnly: false               // Режим только для чтения
+        },
+        // ============================================
+
+        // Добавляем кнопку monacode в тулбар
+        toolbar: "' . $params['toolbar'] . ' monacode",
+
         menubar: ' . $params['menubar'] . ',
         content_css: "' . $params['content_css'] . '",
         language: "' . $lang . '",
         language_url: "/assets/plugins/tinymce7/langs/' . $lang . '.js",
-        //content_style:
+
         quickbars_selection_toolbar: ' . $params['quickbars_selection_toolbar'] . ',
         quickbars_insert_toolbar: ' . $params['quickbars_insert_toolbar'] . ',
         ' . $others_params . '
 
-/////plugin IMAGE
-
+        // ============================================
+        // НАСТРОЙКИ ПЛАГИНА IMAGE
+        // ============================================
         image_class_list: [
             { title: "Responsive", value: "img-responsive" },
             { title: "Rounded", value: "img-rounded" },
@@ -98,7 +131,11 @@ $output = '
         ],
         image_advtab: true,
 
+        // ============================================
+        // SETUP - ХУКИ СОБЫТИЙ
+        // ============================================
         setup: function(editor) {
+            // Событие открытия диалога
             editor.on("OpenWindow", function(e) {
                 const dialog = document.querySelector(".tox-dialog");
                 if (!dialog) return;
@@ -106,20 +143,30 @@ $output = '
                 setTimeout(() => {
                     const firstInput = dialog.querySelector(\'input[type="url"], input[type="text"]\');
                     if (firstInput) {
-                        currentFieldId = firstInput.id; // Сохраняем ID прямо сюда
-                        //console.log("ID первого поля (предположительно Source):", currentFieldId);
+                        currentFieldId = firstInput.id;
                     }
                 }, 50);
             }),
-            editor.on("PostProcess", function (e) {
-            if (e.content) {
-                e.content = e.content.replace(/<iframe(.*?)sandbox=".*?"(.*?)>/g, "<iframe$1$2>");
-            }
-        });
 
+            // Постобработка контента - удаление sandbox из iframe
+            editor.on("PostProcess", function (e) {
+                if (e.content) {
+                    e.content = e.content.replace(/<iframe(.*?)sandbox=".*?"(.*?)>/g, "<iframe$1$2>");
+                }
+            });
+
+            // ============================================
+            // ГОРЯЧАЯ КЛАВИША ДЛЯ MONACO EDITOR
+            // ============================================
+            // Alt+Shift+H - открыть исходный код в Monaco Editor
+            editor.shortcuts.add("alt+shift+h", "Открыть исходный код (Monaco Editor)", function() {
+                editor.execCommand("mceMonacoSource");
+            });
         },
 
-        // Подключение своего file_picker_callback
+        // ============================================
+        // FILE PICKER - ИНТЕГРАЦИЯ С ФАЙЛОВЫМ МЕНЕДЖЕРОМ
+        // ============================================
         file_picker_types: "file image media",
 
         file_picker_callback: function(callback, value, meta) {
@@ -130,43 +177,42 @@ $output = '
             } else if (meta.filetype === "file" || meta.filetype === "media") {
                 rfmTypeParameter = "files";
             } else {
-                // Обработка неизвестных типов файлов, если необходимо
                 console.warn("Неизвестный тип файла в file_picker_callback: " + meta.filetype);
                 return;
             }
 
             openFileManagerForTinyMCE(rfmTypeParameter, callback);
         },
+
+        // ============================================
+        // PASTE - ОЧИСТКА КОНТЕНТА ИЗ WORD
+        // ============================================
         paste_preprocess: function(plugin, args) {
-            // Очистка HTML перед вставкой (например, удаление стилей, классов и т. д.)
             args.content = cleanWordHtml(args.content);
-          },
-          paste_postprocess: function(plugin, args) {
-            // Дополнительная очистка после вставки (если нужно)
+        },
+        paste_postprocess: function(plugin, args) {
             args.node.innerHTML = cleanWordHtml(args.node.innerHTML);
-          }
+        }
     });
 
-            // Функция для очистки HTML из Word
-function cleanWordHtml(html) {
-    // Удаляем теги стилей, комментарии, лишние пробелы и т. д.
-    html = html.replace(/<!--.*?-->/g, ""); // Удаляем комментарии
-    html = html.replace(/<style[^>]*>.*?<\/style>/gsi, ""); // Удаляем стили
-    html = html.replace(/<meta[^>]*>/g, ""); // Удаляем мета-теги
-    html = html.replace(/<o:[^>]*>/g, ""); // Удаляем Office-теги
-    html = html.replace(/\s*class="[^"]*"/g, ""); // Удаляем классы
-    html = html.replace(/\s*style="[^"]*"/g, ""); // Удаляем инлайновые стили
-    html = html.replace(/\s*face="[^"]*"/g, ""); // Удаляем атрибуты шрифтов
-    html = html.replace(/\s*(lang|align)="[^"]*"/g, ""); // Удаляем лишние атрибуты
-    html = html.replace(/<p[^>]*>\s*&nbsp;\s*<\/p>/g, ""); // Удаляем пустые параграфы
-    html = html.replace(/<span[^>]*>(.*?)<\/span>/g, "$1"); // Удаляем лишние span
-    return html;
-}
+    // Функция для очистки HTML из Word
+    function cleanWordHtml(html) {
+        html = html.replace(/<!--.*?-->/g, "");              // Удаляем комментарии
+        html = html.replace(/<style[^>]*>.*?<\/style>/gsi, ""); // Удаляем стили
+        html = html.replace(/<meta[^>]*>/g, "");             // Удаляем мета-теги
+        html = html.replace(/<o:[^>]*>/g, "");               // Удаляем Office-теги
+        html = html.replace(/\s*class="[^"]*"/g, "");        // Удаляем классы
+        html = html.replace(/\s*style="[^"]*"/g, "");        // Удаляем инлайновые стили
+        html = html.replace(/\s*face="[^"]*"/g, "");         // Удаляем атрибуты шрифтов
+        html = html.replace(/\s*(lang|align)="[^"]*"/g, ""); // Удаляем лишние атрибуты
+        html = html.replace(/<p[^>]*>\s*&nbsp;\s*<\/p>/g, ""); // Удаляем пустые параграфы
+        html = html.replace(/<span[^>]*>(.*?)<\/span>/g, "$1"); // Удаляем лишние span
+        return html;
+    }
 
 </script>
 ';
-evo()->event->output($output);
+            evo()->event->output($output);
+        }
+        break;
 }
-break;
-}
-
