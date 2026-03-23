@@ -1,9 +1,7 @@
 <?php
 /**
  * TinyMCE 7 Configuration with Monaco Editor Plugin
- *
- * Модифицированный файл конфигурации TinyMCE 7 для MODX Evolution
- * с интегрированным плагином Monaco Editor для просмотра исходного кода
+ * version 1.01
  */
 
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
@@ -37,10 +35,6 @@ switch (evo()->event->name) {
             $output = '
 
 <script src="/assets/plugins/tinymce7/tinymce.min.js"></script>
-
-<!-- Подключение CSS стилей плагина Monaco Editor (опционально) -->
-<link rel="stylesheet" href="/assets/plugins/tinymce7/plugins/monacode/plugin.css">
-
 <script>
     let editorCallback = null;
     let currentFieldId = null;
@@ -77,14 +71,12 @@ switch (evo()->event->name) {
         paste_as_text: ' . $params['paste_as_text'] . ',
         height: "' . $params['height'] . '",
         width: "' . $params["width"] . '",
+        //max_height: "' . $params['max_height'] . '",
         paste_data_images: ' . $params['paste_data_images'] . ',
         relative_urls: false,
         document_base_url: "/",
         plugins: "' . $params['plugins'] . '",
-
-        // ============================================
-        // ПОДКЛЮЧЕНИЕ ВНЕШНИХ ПЛАГИНОВ
-        // ============================================
+        //base_url: "/assets/plugins/tinymce7",
         external_plugins: {
             "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js",
             // Плагин Monaco Editor для подсветки исходного кода
@@ -110,7 +102,7 @@ switch (evo()->event->name) {
         // ============================================
 
         // Добавляем кнопку monacode в тулбар
-        toolbar: "' . $params['toolbar'] . ' monacode",
+        toolbar: "' . $params['toolbar'] . '",
 
         menubar: ' . $params['menubar'] . ',
         content_css: "' . $params['content_css'] . '",
@@ -188,12 +180,14 @@ switch (evo()->event->name) {
         // PASTE - ОЧИСТКА КОНТЕНТА ИЗ WORD
         // ============================================
         paste_preprocess: function(plugin, args) {
+            // Очистка HTML перед вставкой (например, удаление стилей, классов и т. д.)
             args.content = cleanWordHtml(args.content);
-        },
-        paste_postprocess: function(plugin, args) {
+          },
+          paste_postprocess: function(plugin, args) {
+            // Дополнительная очистка после вставки (если нужно)
             args.node.innerHTML = cleanWordHtml(args.node.innerHTML);
-        }
-    });
+           }
+        });
 
     // Функция для очистки HTML из Word
     function cleanWordHtml(html) {

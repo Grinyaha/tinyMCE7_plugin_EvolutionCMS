@@ -11,8 +11,11 @@ function tmce_mtvinit(selector,lang) {
         relative_urls: false,
         document_base_url: "/",
         plugins: 'searchreplace quickbars nonbreaking code link customlink',
-        toolbar: 'undo redo | styles | bold italic underline strikethrough | link image | searchreplace image table code',
+        toolbar: 'undo redo | styles | bold italic underline strikethrough | link image | searchreplace image table monacode',
         menubar: false,
+        external_plugins: {
+            "monacode": "/assets/plugins/tinymce7/plugins/monacode/plugin.js"
+        },
         setup: function(editor) {
             editor.on('change keyup', function() {
                 var content = editor.getContent();

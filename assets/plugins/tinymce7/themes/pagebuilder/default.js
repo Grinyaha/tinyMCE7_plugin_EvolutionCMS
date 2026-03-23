@@ -11,9 +11,10 @@ function tmce_init(selector,lang) {
         document_base_url: "/",
         plugins: 'searchreplace quickbars nonbreaking code link customlink',
         external_plugins: {
-            "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js"
+            "customlink": "/assets/plugins/tinymce7/plugins/customlink/plugin_modified.js",
+            "monacode": "/assets/plugins/tinymce7/plugins/monacode/plugin.js"
         },
-        toolbar: 'undo redo | styles | bold italic underline strikethrough | link image | searchreplace image table code',
+        toolbar: 'undo redo | styles | bold italic underline strikethrough | link image | searchreplace image table monacode',
         menubar: false
     };
 }
