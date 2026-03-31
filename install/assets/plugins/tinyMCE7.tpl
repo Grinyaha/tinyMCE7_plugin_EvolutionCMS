@@ -5,7 +5,7 @@
  * WYSYWIG for your ❤️Evolution CMS
  *
  * @category    plugin
- * @version     1.01 Beta
+ * @version     1.02
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License (GPL)
  * @package     evo
  * @internal    @events OnRichTextEditorInit,OnRichTextEditorRegister,OnInterfaceSettingsRender

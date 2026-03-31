@@ -1,13 +1,13 @@
 /**
- * TinyMCE 7 Monaco Editor Plugin v3.3.6
+ * TinyMCE 7 Monaco Editor Plugin v3.4.2
  *
- * @version 3.3.6
+ * @version 3.4.2
  */
 
 (function() {
     'use strict';
 
-    var MONACO_BASE_PATH = '/assets/plugins/tinymce7/plugins/monacode/monaco';
+    var MONACO_BASE_PATH = '/assets/plugins/tinymce7/plugins/monacode/monaco/vs';
 
     var DEFAULT_CONFIG = {
         theme: 'vs',
@@ -48,7 +48,6 @@
     }
 
     function getMonacoIframeHtml(content, config, monacoPath) {
-        // Emmet парсер с форматированием
         var emmetCode = ''
             + 'var Emmet={'
             + 'voidEls:"area base br col embed hr img input link meta param source track wbr".split(" "),'
@@ -60,7 +59,6 @@
             + 'toHtml:function(n,lv,num){num=num||1;var h="";var t=this.indent(lv);if(n.type==="root"){for(var i=0;i<n.children.length;i++){h+=this.toHtml(n.children[i],lv,1);if(i<n.children.length-1)h+="\\n"}}if(n.type==="group"){var m=n.mult||1;var ga=[];for(var k=0;k<m;k++){for(var i=0;i<n.children.length;i++){ga.push(this.toHtml(n.children[i],lv,k+1))}}h=ga.join("\\n")}if(n.type==="element"){var mt=n.mult||1;var el=[];for(var k=0;k<mt;k++){var num=k+1;var tn=n.name;var isVoid=this.voidEls.indexOf(tn)>-1;var as="";if(n.id)as+=\' id="\'+n.id.replace(/\\$/g,num)+\'"\';if(n.classes.length){var cs=n.classes.map(function(x){return x.replace(/\\$/g,num)}).join(" ");as+=\' class="\'+cs+\'"\'}if(n.attrs)as+=" "+n.attrs;if(isVoid){el.push(t+"<"+tn+as+" />");continue}var tx=n.text?n.text.replace(/\\$/g,num):"";var ch="";if(n.children.length>0){ch="\\n";for(var i=0;i<n.children.length;i++){ch+=this.toHtml(n.children[i],lv+1,num);if(i<n.children.length-1)ch+="\\n"}ch+="\\n"+t}el.push(t+"<"+tn+as+">"+tx+ch+"</"+tn+">")}h=el.join("\\n")}return h}'
             + '};';
 
-        // Функция форматирования HTML
         var formatCode = ''
             + 'function formatHtmlCode(html){'
             + 'var formatted="",indent=0,tab="  ";'
@@ -89,8 +87,11 @@
             + 'return formatted.trim();'
             + '}';
 
-        // Отключаем web workers (для HTML редактирования они не нужны)
-        var workerConfig = 'window.MonacoEnvironment={getWorkerUrl:function(){return"data:text/javascript;charset=utf-8,"}};';
+        var workerConfig = ''
+            + 'window.MonacoEnvironment={'
+            + 'getWorker:function(workerId,label){return null},'  // явно возвращаем null
+            + 'getWorkerUrl:function(){return"data:text/javascript;charset=utf-8,"}'
+            + '};';
 
         var mainCode = ''
             + 'require.config({paths:{vs:"' + monacoPath + '"}});'
@@ -108,7 +109,10 @@
             + 'tabSize:' + (config.tabSize || 2) + ','
             + 'folding:true,'
             + 'scrollBeyondLastLine:false,'
-            + 'renderWhitespace:"none"'
+            + 'renderWhitespace:"none",'
+            + 'quickSuggestions:false,'
+            + 'wordBasedSuggestions:"off",'
+            + 'suggest:{showWords:false}'
             + '});'
             + 'editor.addCommand(monaco.KeyCode.Tab,function(){'
             + 'if(!emmetOn){editor.trigger("keyboard","type",{text:"  "});return}'
@@ -222,7 +226,7 @@
         ed.addCommand('mceMonacoSource', function() { openDialog(ed); });
         ed.ui.registry.addButton('monacode', {
             icon: 'sourcecode',
-            text: 'HTML',
+            text: "HTML",
             tooltip: 'Исходный код',
             onAction: function() { ed.execCommand('mceMonacoSource'); }
         });
@@ -235,7 +239,7 @@
 
         return {
             getMetadata: function() {
-                return { name: 'Monaco Editor', version: '3.3.6' };
+                return { name: 'Monaco Editor 0.55.1', version: '3.4.0' };
             }
         };
     });

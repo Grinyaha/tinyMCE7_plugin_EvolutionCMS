@@ -1,7 +1,7 @@
 <?php
 /**
  * TinyMCE 7 Configuration with Monaco Editor Plugin
- * version 1.01
+ * version 1.02
  */
 
 if(!defined('MODX_BASE_PATH')){die('What are you doing? Get out of here!');}
